@@ -39,6 +39,7 @@ import (
 	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/clouddns"
 	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/cloudflare"
 	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/digitalocean"
+	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/externaldns"
 	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/rfc2136"
 	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/route53"
 	"github.com/cert-manager/cert-manager/pkg/issuer/acme/dns/util"
@@ -289,6 +290,13 @@ func (s *Solver) solverForChallenge(ctx context.Context, issuer v1.GenericIssuer
 		impl, err = s.dnsProviderConstructors.digitalOcean(strings.TrimSpace(apiToken), s.DNS01Nameservers)
 		if err != nil {
 			return nil, nil, fmt.Errorf("error instantiating digitalocean challenge solver: %s", err.Error())
+		}
+	case providerConfig.ExternalDNS != nil:
+		dbg.Info("preparing to create ExternalDNS provider")
+		impl, err = externaldns.NewDNSProvider(
+			s.DNS01Nameservers)
+		if err != nil {
+			return nil, nil, errors.Wrap(err, "error instantiating akamai challenge solver")
 		}
 	case providerConfig.Route53 != nil:
 		dbg.Info("preparing to create Route53 provider")

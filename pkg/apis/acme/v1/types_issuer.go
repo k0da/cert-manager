@@ -369,6 +369,10 @@ type ACMEChallengeSolverDNS01 struct {
 	// +optional
 	DigitalOcean *ACMEIssuerDNS01ProviderDigitalOcean `json:"digitalocean,omitempty"`
 
+	// Use the DigitalOcean DNS API to manage DNS01 challenge records.
+	// +optional
+	ExternalDNS *ACMEIssuerDNS01ProviderExternalDNS `json:"externaldns,omitempty"`
+
 	// Use the 'ACME DNS' (https://github.com/joohoi/acme-dns) API to manage
 	// DNS01 challenge records.
 	// +optional
@@ -538,6 +542,9 @@ type ACMEIssuerDNS01ProviderAcmeDNS struct {
 	Host string `json:"host"`
 
 	AccountSecret cmmeta.SecretKeySelector `json:"accountSecretRef"`
+}
+
+type ACMEIssuerDNS01ProviderExternalDNS struct {
 }
 
 // ACMEIssuerDNS01ProviderRFC2136 is a structure containing the
